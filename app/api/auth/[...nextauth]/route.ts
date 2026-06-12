@@ -1,5 +1,7 @@
 import NextAuth from "next-auth";
 import { authOptions } from "@/lib/auth";
+
+// For deployment, via dynamic route. 
 export const dynamic = "force-dynamic"; 
 
 const handler = NextAuth(authOptions);

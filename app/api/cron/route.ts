@@ -4,6 +4,9 @@ import { fetchPrices } from "@/lib/yahoo";
 import { calcPnl, calcHypoPnl } from "@/lib/yahoo";
 import { isSuggestionExpired } from "@/lib/utils";
 
+// For deployment, via dynamic route. 
+export const dynamic = "force-dynamic"; 
+
 // Called by Vercel Cron at 10:30 UTC = 4:00 PM IST
 export async function GET(req: NextRequest) {
   // Simple secret header check so random people can't trigger this
