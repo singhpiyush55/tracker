@@ -1,9 +1,9 @@
-export { default } from "next-auth/middleware";
+  export { default } from "next-auth/middleware";
 
-export const config = {
-  matcher: [
-    "/dashboard/:path*",
-    "/screener/:path*",
-    "/trades/:path*",
-  ],
-};
+  export const config = {
+    matcher: [
+      "/dashboard/:path*",
+      "/screener/:path*",
+      "/trades/:path*",
+    ],
+  };
