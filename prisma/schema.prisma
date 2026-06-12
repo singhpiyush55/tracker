@@ -1,0 +1,172 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── NextAuth ────────────────────────────────────────────────────────────────
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ─── Fund ────────────────────────────────────────────────────────────────────
+
+model FundAccount {
+  id           String            @id @default(cuid())
+  totalCapital Float             @default(0)
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  transactions FundTransaction[]
+}
+
+model FundTransaction {
+  id        String      @id @default(cuid())
+  accountId String
+  type      FundTxType
+  amount    Float
+  date      DateTime    @default(now())
+  notes     String?
+  account   FundAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+}
+
+enum FundTxType {
+  DEPOSIT
+  WITHDRAW
+}
+
+// ─── Screener Suggestions ────────────────────────────────────────────────────
+
+model ScreenerSuggestion {
+  id         String              @id @default(cuid())
+  scanDate   DateTime
+  ticker     String              // e.g. AXISBANK
+  tickerNs   String              // auto: AXISBANK.NS
+  name       String
+  sector     String
+  setupType  String              // Pullback / Breakout / Reversal / Bounce
+  score      Float
+  entryLow   Float
+  entryHigh  Float
+  sl         Float
+  t1         Float
+  t2         Float?
+  notes      String?             @db.Text
+  status     SuggestionStatus    @default(ACTIVE)
+  createdAt  DateTime            @default(now())
+  snapshots  SuggestionSnapshot[]
+  trade      Trade?
+}
+
+enum SuggestionStatus {
+  ACTIVE      // within 7 trading days, not yet traded
+  EXPIRED     // 7 trading days passed, no trade taken
+  TRADED      // trade was opened from this suggestion
+  SL_HIT      // hypothetical SL was hit
+  T1_HIT      // hypothetical T1 was hit
+  T2_HIT      // hypothetical T2 was hit
+}
+
+model SuggestionSnapshot {
+  id             String             @id @default(cuid())
+  suggestionId   String
+  date           DateTime
+  closePrice     Float
+  hypoEntryPrice Float              // midpoint of entryLow + entryHigh
+  hypoPnlAbs     Float              // closePrice - hypoEntryPrice
+  hypoPnlPct     Float              // % from hypo entry
+  suggestion     ScreenerSuggestion @relation(fields: [suggestionId], references: [id], onDelete: Cascade)
+
+  @@unique([suggestionId, date])
+}
+
+// ─── Trades ──────────────────────────────────────────────────────────────────
+
+model Trade {
+  id              String       @id @default(cuid())
+  suggestionId    String?      @unique   // nullable — can be a standalone trade
+  ticker          String
+  tickerNs        String
+  name            String
+  sector          String?
+  entryPrice      Float
+  entryDate       DateTime
+  quantity        Int
+  capitalDeployed Float        // entryPrice * quantity
+  exitPrice       Float?
+  exitDate        DateTime?
+  status          TradeStatus  @default(OPEN)
+  realizedPnl     Float?       // set on close
+  realizedPnlPct  Float?
+  sl              Float?
+  t1              Float?
+  t2              Float?
+  notes           String?      @db.Text
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  suggestion      ScreenerSuggestion? @relation(fields: [suggestionId], references: [id])
+  snapshots       TradeSnapshot[]
+}
+
+enum TradeStatus {
+  OPEN
+  CLOSED
+  SL_HIT
+  T1_HIT
+  T2_HIT
+}
+
+model TradeSnapshot {
+  id             String   @id @default(cuid())
+  tradeId        String
+  date           DateTime
+  closePrice     Float
+  unrealizedPnl  Float
+  unrealizedPnlPct Float
+  trade          Trade    @relation(fields: [tradeId], references: [id], onDelete: Cascade)
+
+  @@unique([tradeId, date])
+}
