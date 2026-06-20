@@ -111,6 +111,29 @@ export function TradesClient({ trades }: { trades: TradeWithSnaps[] }) {
 
   const statuses = ["ALL", "OPEN", "CLOSED", "T1_HIT", "T2_HIT", "SL_HIT"];
 
+  // This is for coundting the no of trading sessions for each trade.
+  const NSE_HOLIDAYS_2026 = new Set([
+    "2026-01-26","2026-03-02","2026-03-30","2026-04-02",
+    "2026-04-14","2026-04-17","2026-05-01","2026-08-15",
+    "2026-10-02","2026-10-21","2026-11-09","2026-11-10",
+    "2026-11-30","2026-12-25",
+  ]);
+
+  function countTradingDays(from: Date): number {
+    let count = 0;
+    const d = new Date(from);
+    d.setHours(0, 0, 0, 0);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    while (d < today) {
+      d.setDate(d.getDate() + 1);
+      const dow = d.getDay();
+      const iso = d.toISOString().split("T")[0];
+      if (dow !== 0 && dow !== 6 && !NSE_HOLIDAYS_2026.has(iso)) count++;
+    }
+    return count;
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -180,6 +203,18 @@ export function TradesClient({ trades }: { trades: TradeWithSnaps[] }) {
                       {t.sl && <LevelRow label="SL" value={formatINR(t.sl, 0)} color="text-red-400" />}
                       {t.t1 && <LevelRow label="T1" value={formatINR(t.t1, 0)} color="text-emerald-400" />}
                     </div>
+                    {/* Counting trading sessions */}
+
+
+                    {t.status === "OPEN" && (
+                      <span className="text-xs font-medium text-violet-400">
+                        Day {countTradingDays(new Date(t.entryDate))} of trade
+                      </span>
+                    )} 
+
+
+
+
                     <div className="text-xs text-zinc-600 mt-1">
                       {formatDate(t.entryDate)}
                       {t.exitDate && ` → ${formatDate(t.exitDate)}`}

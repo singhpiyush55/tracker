@@ -7,6 +7,7 @@ const links = [
   { href: "/dashboard", label: "Dashboard" },
   { href: "/screener", label: "Screener Log" },
   { href: "/trades", label: "Trades" },
+  { href: "/journal", label: "Journal" },
 ];
 
 export function Nav() {

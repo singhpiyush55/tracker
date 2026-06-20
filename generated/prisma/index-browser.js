@@ -234,6 +234,16 @@ exports.Prisma.TradeSnapshotScalarFieldEnum = {
   unrealizedPnlPct: 'unrealizedPnlPct'
 };
 
+exports.Prisma.JournalEntryScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  title: 'title',
+  body: 'body',
+  tradeId: 'tradeId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -270,6 +280,11 @@ exports.TradeStatus = exports.$Enums.TradeStatus = {
   T2_HIT: 'T2_HIT'
 };
 
+exports.JournalType = exports.$Enums.JournalType = {
+  LEARNING: 'LEARNING',
+  TRADE_NOTE: 'TRADE_NOTE'
+};
+
 exports.Prisma.ModelName = {
   Account: 'Account',
   Session: 'Session',
@@ -280,7 +295,8 @@ exports.Prisma.ModelName = {
   ScreenerSuggestion: 'ScreenerSuggestion',
   SuggestionSnapshot: 'SuggestionSnapshot',
   Trade: 'Trade',
-  TradeSnapshot: 'TradeSnapshot'
+  TradeSnapshot: 'TradeSnapshot',
+  JournalEntry: 'JournalEntry'
 };
 
 /**

@@ -149,6 +149,7 @@ model Trade {
   updatedAt       DateTime            @updatedAt
   suggestion      ScreenerSuggestion? @relation(fields: [suggestionId], references: [id])
   snapshots       TradeSnapshot[]
+  journalEntries  JournalEntry[] // added later for journaling
 }
 
 enum TradeStatus {
@@ -169,4 +170,21 @@ model TradeSnapshot {
   trade            Trade    @relation(fields: [tradeId], references: [id], onDelete: Cascade)
 
   @@unique([tradeId, date])
+}
+
+// To add journals
+model JournalEntry {
+  id        String      @id @default(cuid())
+  type      JournalType
+  title     String
+  body      String      @db.Text
+  tradeId   String?
+  trade     Trade?      @relation(fields: [tradeId], references: [id], onDelete: SetNull)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+}
+
+enum JournalType {
+  LEARNING
+  TRADE_NOTE
 }

@@ -5,5 +5,6 @@
       "/dashboard/:path*",
       "/screener/:path*",
       "/trades/:path*",
+      "/journal/:path*", 
     ],
   };
