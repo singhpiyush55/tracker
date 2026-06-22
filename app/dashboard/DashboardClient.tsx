@@ -3,7 +3,11 @@
 import { useEffect, useState } from "react";
 import { formatINR, formatPct, pnlClass, formatDate, statusColors } from "@/lib/utils";
 import { addFundTransaction } from "./actions";
-import type { Trade, ScreenerSuggestion } from "@prisma/client";
+// FROM:
+// import type { Trade, ScreenerSuggestion } from "@prisma/client";
+// to fix depyloyment build issue.
+// TO:
+import type { Trade, ScreenerSuggestion } from "../../generated/prisma";
 
 interface Stats {
   totalCapital: number;
