@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { formatINR, formatPct, pnlClass, formatDate, statusColors } from "@/lib/utils";
-import { openTrade, closeTrade, deleteTrade } from "./actions";
+import { openTrade, closeTrade, deleteTrade, updateTradeCharges } from "./actions";
 
 interface TradeWithSnaps {
   id: string; ticker: string; tickerNs: string; name: string; sector: string | null;
@@ -13,11 +13,15 @@ interface TradeWithSnaps {
   notes: string | null;
   suggestion: { scanDate: string; setupType: string; score: number } | null;
   snapshots: { date: string; closePrice: number; unrealizedPnl: number; unrealizedPnlPct: number }[];
+  buyCharges: number | null;
+sellCharges: number | null;
 }
 
 const EMPTY_TRADE_FORM = {
   ticker: "", name: "", sector: "", entryPrice: "", quantity: "",
   sl: "", t1: "", t2: "", notes: "", entryDate: new Date().toISOString().split("T")[0],
+  buyCharges: "",
+  sellCharges: "",
 };
 
 export function TradesClient({ trades }: { trades: TradeWithSnaps[] }) {
@@ -27,7 +31,7 @@ export function TradesClient({ trades }: { trades: TradeWithSnaps[] }) {
   const [addForm, setAddForm] = useState(EMPTY_TRADE_FORM);
   const [savingAdd, setSavingAdd] = useState(false);
   const [closeTarget, setCloseTarget] = useState<TradeWithSnaps | null>(null);
-  const [closeForm, setCloseForm] = useState({ exitPrice: "", exitDate: new Date().toISOString().split("T")[0], status: "CLOSED" as const, notes: "" });
+  const [closeForm, setCloseForm] = useState({ exitPrice: "", exitDate: new Date().toISOString().split("T")[0], status: "CLOSED" as const, notes: "", sellCharges: "" });
   const [savingClose, setSavingClose] = useState(false);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [filterStatus, setFilterStatus] = useState("ALL");
@@ -76,6 +80,7 @@ export function TradesClient({ trades }: { trades: TradeWithSnaps[] }) {
         t1: addForm.t1 ? parseFloat(addForm.t1) : undefined,
         t2: addForm.t2 ? parseFloat(addForm.t2) : undefined,
         notes: addForm.notes || undefined,
+        buyCharges: addForm.buyCharges ? parseFloat(addForm.buyCharges) : undefined,
       });
       setShowAddModal(false);
       setAddForm(EMPTY_TRADE_FORM);
@@ -93,8 +98,9 @@ export function TradesClient({ trades }: { trades: TradeWithSnaps[] }) {
         tradeId: closeTarget.id,
         exitPrice: parseFloat(closeForm.exitPrice),
         exitDate: closeForm.exitDate,
-        status: closeForm.status as any,
+        status: closeForm.status as "CLOSED" | "SL_HIT" | "T1_HIT" | "T2_HIT",
         notes: closeForm.notes || undefined,
+        sellCharges: closeForm.sellCharges ? parseFloat(closeForm.sellCharges) : undefined,
       });
       setCloseTarget(null);
       window.location.reload();
@@ -221,6 +227,22 @@ export function TradesClient({ trades }: { trades: TradeWithSnaps[] }) {
                       {t.sector && ` · ${t.sector}`}
                     </div>
                     {t.notes && <p className="text-xs text-zinc-500 mt-1 italic">{t.notes}</p>}
+
+                    {/* // for editing the charges */}
+                    {t.status !== "OPEN" && (t.buyCharges || t.sellCharges) && (
+                      <div className="text-xs text-zinc-600 mt-1">
+                        Charges: ₹{((t.buyCharges ?? 0) + (t.sellCharges ?? 0)).toFixed(2)}
+                        {" "}(buy ₹{t.buyCharges ?? 0} + sell ₹{t.sellCharges ?? 0})
+                      </div>
+                    )}
+                    {t.status !== "OPEN" && (
+                      <EditCharges trade={t} onSave={async (buy, sell) => {
+                        await updateTradeCharges({ tradeId: t.id, buyCharges: buy, sellCharges: sell });
+                        window.location.reload();
+                      }} />
+                    )}
+
+
                   </div>
 
                   {/* Right — P&L */}
@@ -237,7 +259,7 @@ export function TradesClient({ trades }: { trades: TradeWithSnaps[] }) {
                           </>
                         ) : <div className="text-zinc-600 text-xs">no price</div>}
                         <button
-                          onClick={() => { setCloseTarget(t); setCloseForm({ exitPrice: prices[t.ticker]?.price?.toFixed(0) ?? "", exitDate: new Date().toISOString().split("T")[0], status: "CLOSED", notes: "" }); }}
+                          onClick={() => { setCloseTarget(t); setCloseForm({ exitPrice: prices[t.ticker]?.price?.toFixed(0) ?? "", exitDate: new Date().toISOString().split("T")[0], status: "CLOSED", notes: "", sellCharges: "" }); }}
                           className="btn-ghost text-xs px-2 py-1"
                         >
                           Close
@@ -329,6 +351,13 @@ export function TradesClient({ trades }: { trades: TradeWithSnaps[] }) {
                 <input className="input" value={addForm.notes}
                   onChange={(e) => setAddForm((f) => ({ ...f, notes: e.target.value }))} />
               </div>
+
+              <div className="col-span-2">
+                <label className="label">Buy Charges ₹ (brokerage + taxes)</label>
+                <input type="number" className="input" placeholder="e.g. 36"
+                  value={addForm.buyCharges}
+                  onChange={(e) => setAddForm((f) => ({ ...f, buyCharges: e.target.value }))} />
+              </div>
             </div>
             {addForm.entryPrice && addForm.quantity && (
               <div className="text-xs text-zinc-500">
@@ -360,8 +389,17 @@ export function TradesClient({ trades }: { trades: TradeWithSnaps[] }) {
                 onChange={(e) => setCloseForm((f) => ({ ...f, exitPrice: e.target.value }))} />
               {closeForm.exitPrice && (
                 <div className={`text-xs mt-1 font-medium ${pnlClass((parseFloat(closeForm.exitPrice) - closeTarget.entryPrice) * closeTarget.quantity)}`}>
-                  P&L: {formatINR((parseFloat(closeForm.exitPrice) - closeTarget.entryPrice) * closeTarget.quantity, 0)}
-                  {" "}({formatPct(((parseFloat(closeForm.exitPrice) - closeTarget.entryPrice) / closeTarget.entryPrice) * 100)})
+                  Gross: {formatINR((parseFloat(closeForm.exitPrice) - closeTarget.entryPrice) * closeTarget.quantity, 0)}
+                  {closeForm.sellCharges && (
+                    <span className="text-zinc-500 ml-2">
+                      Net: {formatINR(
+                        (parseFloat(closeForm.exitPrice) - closeTarget.entryPrice) * closeTarget.quantity
+                        - parseFloat(closeForm.sellCharges)
+                        - (closeTarget.buyCharges ?? 0),
+                        0
+                      )}
+                    </span>
+                  )}
                 </div>
               )}
             </div>
@@ -379,6 +417,12 @@ export function TradesClient({ trades }: { trades: TradeWithSnaps[] }) {
                 <option value="T2_HIT">T2 Hit</option>
                 <option value="SL_HIT">SL Hit</option>
               </select>
+            </div>
+            <div>
+              <label className="label">Sell Charges ₹ (brokerage + taxes)</label>
+              <input type="number" className="input" placeholder="e.g. 56"
+                value={closeForm.sellCharges}
+                onChange={(e) => setCloseForm((f) => ({ ...f, sellCharges: e.target.value }))} />
             </div>
             <div>
               <label className="label">Notes</label>
@@ -435,6 +479,40 @@ function TradeChart({ snapshots }: { snapshots: { date: string; unrealizedPnlPct
         <span>{new Date(snapshots[0].date).toLocaleDateString("en-IN", { day: "2-digit", month: "short" })}</span>
         <span>{new Date(snapshots[snapshots.length - 1].date).toLocaleDateString("en-IN", { day: "2-digit", month: "short" })}</span>
       </div>
+    </div>
+  );
+}
+
+function EditCharges({ trade, onSave }: {
+  trade: any;
+  onSave: (buy: number, sell: number) => Promise<void>;
+}) {
+  const [open, setOpen] = useState(false);
+  const [buy, setBuy] = useState(String(trade.buyCharges ?? 0));
+  const [sell, setSell] = useState(String(trade.sellCharges ?? 0));
+  const [saving, setSaving] = useState(false);
+
+  if (!open) return (
+    <button onClick={() => setOpen(true)}
+      className="text-xs text-zinc-600 hover:text-zinc-400 transition-colors ml-3">
+      Edit charges
+    </button>
+  );
+
+  return (
+    <div className="flex items-center gap-2 mt-2 flex-wrap">
+      <input type="number" className="input w-28 text-xs py-1" placeholder="Buy ₹"
+        value={buy} onChange={e => setBuy(e.target.value)} />
+      <input type="number" className="input w-28 text-xs py-1" placeholder="Sell ₹"
+        value={sell} onChange={e => setSell(e.target.value)} />
+      <button onClick={async () => {
+        setSaving(true);
+        await onSave(parseFloat(buy || "0"), parseFloat(sell || "0"));
+        setSaving(false); setOpen(false);
+      }} className="btn-primary text-xs px-3 py-1">
+        {saving ? "Saving…" : "Save"}
+      </button>
+      <button onClick={() => setOpen(false)} className="text-xs text-zinc-500">Cancel</button>
     </div>
   );
 }

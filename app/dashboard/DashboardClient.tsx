@@ -84,6 +84,8 @@ export function DashboardClient({ stats, openTrades, activeSuggestions, recentCl
     return sum + (pnl?.abs ?? 0);
   }, 0);
 
+
+
   const handleFundSubmit = async () => {
     const amount = parseFloat(fundAmount);
     if (!amount || amount <= 0) return;
@@ -157,6 +159,7 @@ export function DashboardClient({ stats, openTrades, activeSuggestions, recentCl
               <tbody>
                 {openTrades.map((t) => {
                   const pnl = getLivePnl(t);
+                  
                   return (
                     <tr key={t.id} className="border-b border-zinc-800/50 hover:bg-zinc-900/50">
                       <td className="py-3 px-3 pl-0">
@@ -243,19 +246,28 @@ export function DashboardClient({ stats, openTrades, activeSuggestions, recentCl
         <section>
           <h2 className="text-sm font-medium text-zinc-400 uppercase tracking-wider mb-3">Recent Closed</h2>
           <div className="space-y-2">
-            {recentClosed.map((t) => (
-              <div key={t.id} className="card flex items-center justify-between">
-                <div>
-                  <span className="font-medium text-zinc-100 mr-2">{t.ticker}</span>
-                  <span className={`badge text-[10px] ${statusColors[t.status]}`}>{t.status.replace("_", " ")}</span>
-                  <div className="text-xs text-zinc-500 mt-0.5">{formatDate(t.exitDate!)} · {t.quantity} shares</div>
+            {recentClosed.map((t) => {
+              const netPnl = t.realizedPnl ?? 0; // already net since actions.ts subtracts charges now
+
+              return (
+                <div key={t.id} className="card flex items-center justify-between">
+                  <div>
+                    <span className="font-medium text-zinc-100 mr-2">{t.ticker}</span>
+                    <span className={`badge text-[10px] ${statusColors[t.status]}`}>{t.status.replace("_", " ")}</span>
+                    <div className="text-xs text-zinc-500 mt-0.5">{formatDate(t.exitDate!)} · {t.quantity} shares</div>
+                  </div>
+                  {/* <div className="text-right">
+                    <div className={`font-medium ${pnlClass(t.realizedPnl ?? 0)}`}>{formatINR(t.realizedPnl ?? 0, 0)}</div>
+                    <div className={`text-xs ${pnlClass(t.realizedPnlPct ?? 0)}`}>{formatPct(t.realizedPnlPct ?? 0)}</div>
+                  </div> */}
+                  {/* // Replace realizedPnl display with: */}
+                  <div className={`font-medium ${pnlClass(netPnl)}`}>{formatINR(netPnl, 0)}</div>
+                  <div className={`text-xs ${pnlClass(t.realizedPnlPct ?? 0)}`}>
+                    {formatPct(t.realizedPnlPct ?? 0)} net
+                  </div>
                 </div>
-                <div className="text-right">
-                  <div className={`font-medium ${pnlClass(t.realizedPnl ?? 0)}`}>{formatINR(t.realizedPnl ?? 0, 0)}</div>
-                  <div className={`text-xs ${pnlClass(t.realizedPnlPct ?? 0)}`}>{formatPct(t.realizedPnlPct ?? 0)}</div>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </section>
       )}

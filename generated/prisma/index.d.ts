@@ -10950,6 +10950,8 @@ export namespace Prisma {
     sl: number | null
     t1: number | null
     t2: number | null
+    buyCharges: number | null
+    sellCharges: number | null
   }
 
   export type TradeSumAggregateOutputType = {
@@ -10962,6 +10964,8 @@ export namespace Prisma {
     sl: number | null
     t1: number | null
     t2: number | null
+    buyCharges: number | null
+    sellCharges: number | null
   }
 
   export type TradeMinAggregateOutputType = {
@@ -10986,6 +10990,8 @@ export namespace Prisma {
     notes: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    buyCharges: number | null
+    sellCharges: number | null
   }
 
   export type TradeMaxAggregateOutputType = {
@@ -11010,6 +11016,8 @@ export namespace Prisma {
     notes: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    buyCharges: number | null
+    sellCharges: number | null
   }
 
   export type TradeCountAggregateOutputType = {
@@ -11034,6 +11042,8 @@ export namespace Prisma {
     notes: number
     createdAt: number
     updatedAt: number
+    buyCharges: number
+    sellCharges: number
     _all: number
   }
 
@@ -11048,6 +11058,8 @@ export namespace Prisma {
     sl?: true
     t1?: true
     t2?: true
+    buyCharges?: true
+    sellCharges?: true
   }
 
   export type TradeSumAggregateInputType = {
@@ -11060,6 +11072,8 @@ export namespace Prisma {
     sl?: true
     t1?: true
     t2?: true
+    buyCharges?: true
+    sellCharges?: true
   }
 
   export type TradeMinAggregateInputType = {
@@ -11084,6 +11098,8 @@ export namespace Prisma {
     notes?: true
     createdAt?: true
     updatedAt?: true
+    buyCharges?: true
+    sellCharges?: true
   }
 
   export type TradeMaxAggregateInputType = {
@@ -11108,6 +11124,8 @@ export namespace Prisma {
     notes?: true
     createdAt?: true
     updatedAt?: true
+    buyCharges?: true
+    sellCharges?: true
   }
 
   export type TradeCountAggregateInputType = {
@@ -11132,6 +11150,8 @@ export namespace Prisma {
     notes?: true
     createdAt?: true
     updatedAt?: true
+    buyCharges?: true
+    sellCharges?: true
     _all?: true
   }
 
@@ -11243,6 +11263,8 @@ export namespace Prisma {
     notes: string | null
     createdAt: Date
     updatedAt: Date
+    buyCharges: number | null
+    sellCharges: number | null
     _count: TradeCountAggregateOutputType | null
     _avg: TradeAvgAggregateOutputType | null
     _sum: TradeSumAggregateOutputType | null
@@ -11286,6 +11308,8 @@ export namespace Prisma {
     notes?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    buyCharges?: boolean
+    sellCharges?: boolean
     suggestion?: boolean | Trade$suggestionArgs<ExtArgs>
     snapshots?: boolean | Trade$snapshotsArgs<ExtArgs>
     journalEntries?: boolean | Trade$journalEntriesArgs<ExtArgs>
@@ -11314,6 +11338,8 @@ export namespace Prisma {
     notes?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    buyCharges?: boolean
+    sellCharges?: boolean
     suggestion?: boolean | Trade$suggestionArgs<ExtArgs>
   }, ExtArgs["result"]["trade"]>
 
@@ -11339,6 +11365,8 @@ export namespace Prisma {
     notes?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    buyCharges?: boolean
+    sellCharges?: boolean
     suggestion?: boolean | Trade$suggestionArgs<ExtArgs>
   }, ExtArgs["result"]["trade"]>
 
@@ -11364,9 +11392,11 @@ export namespace Prisma {
     notes?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    buyCharges?: boolean
+    sellCharges?: boolean
   }
 
-  export type TradeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "suggestionId" | "ticker" | "tickerNs" | "name" | "sector" | "entryPrice" | "entryDate" | "quantity" | "capitalDeployed" | "exitPrice" | "exitDate" | "status" | "realizedPnl" | "realizedPnlPct" | "sl" | "t1" | "t2" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["trade"]>
+  export type TradeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "suggestionId" | "ticker" | "tickerNs" | "name" | "sector" | "entryPrice" | "entryDate" | "quantity" | "capitalDeployed" | "exitPrice" | "exitDate" | "status" | "realizedPnl" | "realizedPnlPct" | "sl" | "t1" | "t2" | "notes" | "createdAt" | "updatedAt" | "buyCharges" | "sellCharges", ExtArgs["result"]["trade"]>
   export type TradeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     suggestion?: boolean | Trade$suggestionArgs<ExtArgs>
     snapshots?: boolean | Trade$snapshotsArgs<ExtArgs>
@@ -11409,6 +11439,8 @@ export namespace Prisma {
       notes: string | null
       createdAt: Date
       updatedAt: Date
+      buyCharges: number | null
+      sellCharges: number | null
     }, ExtArgs["result"]["trade"]>
     composites: {}
   }
@@ -11856,6 +11888,8 @@ export namespace Prisma {
     readonly notes: FieldRef<"Trade", 'String'>
     readonly createdAt: FieldRef<"Trade", 'DateTime'>
     readonly updatedAt: FieldRef<"Trade", 'DateTime'>
+    readonly buyCharges: FieldRef<"Trade", 'Float'>
+    readonly sellCharges: FieldRef<"Trade", 'Float'>
   }
     
 
@@ -14708,7 +14742,9 @@ export namespace Prisma {
     t2: 't2',
     notes: 'notes',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    buyCharges: 'buyCharges',
+    sellCharges: 'sellCharges'
   };
 
   export type TradeScalarFieldEnum = (typeof TradeScalarFieldEnum)[keyof typeof TradeScalarFieldEnum]
@@ -15449,6 +15485,8 @@ export namespace Prisma {
     notes?: StringNullableFilter<"Trade"> | string | null
     createdAt?: DateTimeFilter<"Trade"> | Date | string
     updatedAt?: DateTimeFilter<"Trade"> | Date | string
+    buyCharges?: FloatNullableFilter<"Trade"> | number | null
+    sellCharges?: FloatNullableFilter<"Trade"> | number | null
     suggestion?: XOR<ScreenerSuggestionNullableScalarRelationFilter, ScreenerSuggestionWhereInput> | null
     snapshots?: TradeSnapshotListRelationFilter
     journalEntries?: JournalEntryListRelationFilter
@@ -15476,6 +15514,8 @@ export namespace Prisma {
     notes?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    buyCharges?: SortOrderInput | SortOrder
+    sellCharges?: SortOrderInput | SortOrder
     suggestion?: ScreenerSuggestionOrderByWithRelationInput
     snapshots?: TradeSnapshotOrderByRelationAggregateInput
     journalEntries?: JournalEntryOrderByRelationAggregateInput
@@ -15506,6 +15546,8 @@ export namespace Prisma {
     notes?: StringNullableFilter<"Trade"> | string | null
     createdAt?: DateTimeFilter<"Trade"> | Date | string
     updatedAt?: DateTimeFilter<"Trade"> | Date | string
+    buyCharges?: FloatNullableFilter<"Trade"> | number | null
+    sellCharges?: FloatNullableFilter<"Trade"> | number | null
     suggestion?: XOR<ScreenerSuggestionNullableScalarRelationFilter, ScreenerSuggestionWhereInput> | null
     snapshots?: TradeSnapshotListRelationFilter
     journalEntries?: JournalEntryListRelationFilter
@@ -15533,6 +15575,8 @@ export namespace Prisma {
     notes?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    buyCharges?: SortOrderInput | SortOrder
+    sellCharges?: SortOrderInput | SortOrder
     _count?: TradeCountOrderByAggregateInput
     _avg?: TradeAvgOrderByAggregateInput
     _max?: TradeMaxOrderByAggregateInput
@@ -15565,6 +15609,8 @@ export namespace Prisma {
     notes?: StringNullableWithAggregatesFilter<"Trade"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Trade"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Trade"> | Date | string
+    buyCharges?: FloatNullableWithAggregatesFilter<"Trade"> | number | null
+    sellCharges?: FloatNullableWithAggregatesFilter<"Trade"> | number | null
   }
 
   export type TradeSnapshotWhereInput = {
@@ -16299,6 +16345,8 @@ export namespace Prisma {
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    buyCharges?: number | null
+    sellCharges?: number | null
     suggestion?: ScreenerSuggestionCreateNestedOneWithoutTradeInput
     snapshots?: TradeSnapshotCreateNestedManyWithoutTradeInput
     journalEntries?: JournalEntryCreateNestedManyWithoutTradeInput
@@ -16326,6 +16374,8 @@ export namespace Prisma {
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    buyCharges?: number | null
+    sellCharges?: number | null
     snapshots?: TradeSnapshotUncheckedCreateNestedManyWithoutTradeInput
     journalEntries?: JournalEntryUncheckedCreateNestedManyWithoutTradeInput
   }
@@ -16351,6 +16401,8 @@ export namespace Prisma {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    buyCharges?: NullableFloatFieldUpdateOperationsInput | number | null
+    sellCharges?: NullableFloatFieldUpdateOperationsInput | number | null
     suggestion?: ScreenerSuggestionUpdateOneWithoutTradeNestedInput
     snapshots?: TradeSnapshotUpdateManyWithoutTradeNestedInput
     journalEntries?: JournalEntryUpdateManyWithoutTradeNestedInput
@@ -16378,6 +16430,8 @@ export namespace Prisma {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    buyCharges?: NullableFloatFieldUpdateOperationsInput | number | null
+    sellCharges?: NullableFloatFieldUpdateOperationsInput | number | null
     snapshots?: TradeSnapshotUncheckedUpdateManyWithoutTradeNestedInput
     journalEntries?: JournalEntryUncheckedUpdateManyWithoutTradeNestedInput
   }
@@ -16404,6 +16458,8 @@ export namespace Prisma {
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    buyCharges?: number | null
+    sellCharges?: number | null
   }
 
   export type TradeUpdateManyMutationInput = {
@@ -16427,6 +16483,8 @@ export namespace Prisma {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    buyCharges?: NullableFloatFieldUpdateOperationsInput | number | null
+    sellCharges?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
   export type TradeUncheckedUpdateManyInput = {
@@ -16451,6 +16509,8 @@ export namespace Prisma {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    buyCharges?: NullableFloatFieldUpdateOperationsInput | number | null
+    sellCharges?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
   export type TradeSnapshotCreateInput = {
@@ -17259,6 +17319,8 @@ export namespace Prisma {
     notes?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    buyCharges?: SortOrder
+    sellCharges?: SortOrder
   }
 
   export type TradeAvgOrderByAggregateInput = {
@@ -17271,6 +17333,8 @@ export namespace Prisma {
     sl?: SortOrder
     t1?: SortOrder
     t2?: SortOrder
+    buyCharges?: SortOrder
+    sellCharges?: SortOrder
   }
 
   export type TradeMaxOrderByAggregateInput = {
@@ -17295,6 +17359,8 @@ export namespace Prisma {
     notes?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    buyCharges?: SortOrder
+    sellCharges?: SortOrder
   }
 
   export type TradeMinOrderByAggregateInput = {
@@ -17319,6 +17385,8 @@ export namespace Prisma {
     notes?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    buyCharges?: SortOrder
+    sellCharges?: SortOrder
   }
 
   export type TradeSumOrderByAggregateInput = {
@@ -17331,6 +17399,8 @@ export namespace Prisma {
     sl?: SortOrder
     t1?: SortOrder
     t2?: SortOrder
+    buyCharges?: SortOrder
+    sellCharges?: SortOrder
   }
 
   export type IntWithAggregatesFilter<$PrismaModel = never> = {
@@ -18564,6 +18634,8 @@ export namespace Prisma {
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    buyCharges?: number | null
+    sellCharges?: number | null
     snapshots?: TradeSnapshotCreateNestedManyWithoutTradeInput
     journalEntries?: JournalEntryCreateNestedManyWithoutTradeInput
   }
@@ -18589,6 +18661,8 @@ export namespace Prisma {
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    buyCharges?: number | null
+    sellCharges?: number | null
     snapshots?: TradeSnapshotUncheckedCreateNestedManyWithoutTradeInput
     journalEntries?: JournalEntryUncheckedCreateNestedManyWithoutTradeInput
   }
@@ -18659,6 +18733,8 @@ export namespace Prisma {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    buyCharges?: NullableFloatFieldUpdateOperationsInput | number | null
+    sellCharges?: NullableFloatFieldUpdateOperationsInput | number | null
     snapshots?: TradeSnapshotUpdateManyWithoutTradeNestedInput
     journalEntries?: JournalEntryUpdateManyWithoutTradeNestedInput
   }
@@ -18684,6 +18760,8 @@ export namespace Prisma {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    buyCharges?: NullableFloatFieldUpdateOperationsInput | number | null
+    sellCharges?: NullableFloatFieldUpdateOperationsInput | number | null
     snapshots?: TradeSnapshotUncheckedUpdateManyWithoutTradeNestedInput
     journalEntries?: JournalEntryUncheckedUpdateManyWithoutTradeNestedInput
   }
@@ -19012,6 +19090,8 @@ export namespace Prisma {
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    buyCharges?: number | null
+    sellCharges?: number | null
     suggestion?: ScreenerSuggestionCreateNestedOneWithoutTradeInput
     journalEntries?: JournalEntryCreateNestedManyWithoutTradeInput
   }
@@ -19038,6 +19118,8 @@ export namespace Prisma {
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    buyCharges?: number | null
+    sellCharges?: number | null
     journalEntries?: JournalEntryUncheckedCreateNestedManyWithoutTradeInput
   }
 
@@ -19078,6 +19160,8 @@ export namespace Prisma {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    buyCharges?: NullableFloatFieldUpdateOperationsInput | number | null
+    sellCharges?: NullableFloatFieldUpdateOperationsInput | number | null
     suggestion?: ScreenerSuggestionUpdateOneWithoutTradeNestedInput
     journalEntries?: JournalEntryUpdateManyWithoutTradeNestedInput
   }
@@ -19104,6 +19188,8 @@ export namespace Prisma {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    buyCharges?: NullableFloatFieldUpdateOperationsInput | number | null
+    sellCharges?: NullableFloatFieldUpdateOperationsInput | number | null
     journalEntries?: JournalEntryUncheckedUpdateManyWithoutTradeNestedInput
   }
 
@@ -19128,6 +19214,8 @@ export namespace Prisma {
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    buyCharges?: number | null
+    sellCharges?: number | null
     suggestion?: ScreenerSuggestionCreateNestedOneWithoutTradeInput
     snapshots?: TradeSnapshotCreateNestedManyWithoutTradeInput
   }
@@ -19154,6 +19242,8 @@ export namespace Prisma {
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    buyCharges?: number | null
+    sellCharges?: number | null
     snapshots?: TradeSnapshotUncheckedCreateNestedManyWithoutTradeInput
   }
 
@@ -19194,6 +19284,8 @@ export namespace Prisma {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    buyCharges?: NullableFloatFieldUpdateOperationsInput | number | null
+    sellCharges?: NullableFloatFieldUpdateOperationsInput | number | null
     suggestion?: ScreenerSuggestionUpdateOneWithoutTradeNestedInput
     snapshots?: TradeSnapshotUpdateManyWithoutTradeNestedInput
   }
@@ -19220,6 +19312,8 @@ export namespace Prisma {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    buyCharges?: NullableFloatFieldUpdateOperationsInput | number | null
+    sellCharges?: NullableFloatFieldUpdateOperationsInput | number | null
     snapshots?: TradeSnapshotUncheckedUpdateManyWithoutTradeNestedInput
   }
 

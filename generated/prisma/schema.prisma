@@ -150,6 +150,8 @@ model Trade {
   suggestion      ScreenerSuggestion? @relation(fields: [suggestionId], references: [id])
   snapshots       TradeSnapshot[]
   journalEntries  JournalEntry[] // added later for journaling
+  buyCharges      Float?              @default(0) // added for brokrage calc
+  sellCharges     Float?              @default(0) // added for brokrage calc
 }
 
 enum TradeStatus {

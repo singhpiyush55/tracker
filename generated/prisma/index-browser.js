@@ -222,7 +222,9 @@ exports.Prisma.TradeScalarFieldEnum = {
   t2: 't2',
   notes: 'notes',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  buyCharges: 'buyCharges',
+  sellCharges: 'sellCharges'
 };
 
 exports.Prisma.TradeSnapshotScalarFieldEnum = {
