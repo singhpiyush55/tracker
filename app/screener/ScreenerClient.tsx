@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { formatINR, formatPct, pnlClass, formatDate, statusColors } from "@/lib/utils";
 import { openTrade } from "../trades/actions";
+import { deleteExpiredSuggestion } from "./actions";
 
 interface Snapshot { date: string; closePrice: number; hypoPnlPct: number; }
 interface SuggestionWithTrade {
@@ -225,6 +226,18 @@ export function ScreenerClient({ suggestions }: { suggestions: SuggestionWithTra
                     )}
                     {s.trade && (
                       <span className="text-xs text-violet-400">Trade open</span>
+                    )}
+                    {s.status === "EXPIRED" && !s.trade && (
+                      <button
+                        onClick={async () => {
+                          if (!confirm("Delete this expired suggestion and its snapshots?")) return;
+                          await deleteExpiredSuggestion(s.id);
+                          window.location.reload();
+                        }}
+                        className="btn-danger text-xs px-3 py-1.5"
+                      >
+                        Delete
+                      </button>
                     )}
                   </div>
                 </div>
